@@ -15,7 +15,15 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@mzm/*": ["libs/*"],
+      "@mzm/electron": ["xplat/electron/index.ts"],
+      "@mzm/electron/*": ["xplat/electron/*"],
+      "@mzm/ionic": ["xplat/ionic/index.ts"],
+      "@mzm/ionic/*": ["xplat/ionic/*"],
+      "@mzm/web": ["xplat/web/index.ts"],
+      "@mzm/web/*": ["xplat/web/*"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
