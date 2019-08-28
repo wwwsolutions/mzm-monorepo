@@ -22,9 +22,7 @@
               "testing/tsconfig.libs.json",
               "testing/tsconfig.libs.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -50,9 +48,133 @@
               "testing/tsconfig.xplat.json",
               "testing/tsconfig.xplat.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "web-dashboard": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/web-dashboard",
+      "sourceRoot": "apps/web-dashboard/src",
+      "prefix": "mzm",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/web-dashboard",
+            "index": "apps/web-dashboard/src/index.html",
+            "main": "apps/web-dashboard/src/main.ts",
+            "polyfills": "apps/web-dashboard/src/polyfills.ts",
+            "tsConfig": "apps/web-dashboard/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/web-dashboard/src/favicon.ico",
+              "apps/web-dashboard/src/assets"
+            ],
+            "styles": [
+              "xplat/web/scss/_index.scss",
+              "apps/web-dashboard/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/web-dashboard/src/environments/environment.ts",
+                  "with": "apps/web-dashboard/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "web-dashboard:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "web-dashboard:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "web-dashboard:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/web-dashboard/tsconfig.app.json",
+              "apps/web-dashboard/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/web-dashboard/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/web-dashboard/jest.config.js",
+            "tsConfig": "apps/web-dashboard/tsconfig.spec.json",
+            "setupFile": "apps/web-dashboard/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "web-dashboard-e2e": {
+      "root": "apps/web-dashboard-e2e",
+      "sourceRoot": "apps/web-dashboard-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/web-dashboard-e2e/cypress.json",
+            "tsConfig": "apps/web-dashboard-e2e/tsconfig.e2e.json",
+            "devServerTarget": "web-dashboard:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "web-dashboard:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/web-dashboard-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/web-dashboard-e2e/**"]
           }
         }
       }
@@ -60,5 +182,14 @@
   },
   "cli": {
     "defaultCollection": "@nstudio/xplat"
+  },
+  "schematics": {
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
+    }
   }
 }
